@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using System.Linq;
+
 public class Player : ObjectBase {
 
     #region define
@@ -24,7 +26,7 @@ public class Player : ObjectBase {
     {
         if(_transform == null)return;
         if(!_activeFlg) return;
-        if(_sceneManager.GoalObject.ActiveFlg){
+        if(CheckActiveGoalObject()){
             GoalTargetMove();
         }
         else{
@@ -37,8 +39,7 @@ public class Player : ObjectBase {
     /// </summary>
     private void GoalTargetMove()
     {
-        var goalObject = _sceneManager.GoalObject;
-        var vectorX    = goalObject.transform.position.x - _transform.position.x;
+        var vectorX        = GetActiveDistanceGoalObject().transform.position.x - _transform.position.x;
         if(vectorX > 0.0f){
             _transform.Translate(new Vector3(kMoveSpeed * Time.deltaTime, 0.0f, 0.0f));
             _sprite.flipX = false;
@@ -62,7 +63,7 @@ public class Player : ObjectBase {
     }
 
 
-    #region protected field
+    #region protected function
     /// <summary>
     /// 初期化
     /// </summary>
@@ -90,5 +91,28 @@ public class Player : ObjectBase {
     }
     #endregion
 
+    #region private function
+    /// <summary>
+    /// アクティブなゴールがあるか判定
+    /// </summary>
+    /// <returns></returns>
+    private bool CheckActiveGoalObject()
+    {
+        var goalObjectList = _sceneManager.StageGenerateManager.GoalObjectList;
+        for(var i = 0; i < goalObjectList.Count; ++i){
+            if(goalObjectList[i].ActiveFlg) return true;
+        }
+        return false;
+    }
 
+    /// <summary>
+    /// 最も近いゴールを取得
+    /// </summary>
+    /// <returns></returns>
+    private GoalObject GetActiveDistanceGoalObject()
+    {
+        var goalObjectList = _sceneManager.StageGenerateManager.GoalObjectList;
+        return goalObjectList.Where(x => x.ActiveFlg == true).OrderBy(x => Vector3.Distance(_transform.position, x.transform.position)).ToList()[0];
+    }
+    #endregion
 }

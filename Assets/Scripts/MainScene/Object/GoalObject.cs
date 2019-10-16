@@ -30,11 +30,11 @@ public class GoalObject : ObjectBase {
     protected override void SetCollision(bool flg)
     {
         if(flg){
-            _sprite.sprite = _sceneManager.SpriteManager.ObjectSpriteList[2];
+            _sprite.sprite = _sceneManager.SpriteManager.GoalWhiteSpriteList[0];
             _activeFlg     = true;
         }
         else{
-            _sprite.sprite = _sceneManager.SpriteManager.ObjectSpriteList[3];
+            _sprite.sprite = _sceneManager.SpriteManager.GoalWhiteSpriteList[1];
             _activeFlg     = false;
         }
     }

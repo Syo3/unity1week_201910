@@ -20,11 +20,11 @@ public class NormalBlock : ObjectBase {
     protected override void SetCollision(bool flg)
     {
         if(flg){
-            _sprite.sprite      = _sceneManager.SpriteManager.ObjectSpriteList[0];
+            _sprite.sprite      = _sceneManager.SpriteManager.NormalBlockWhiteSpriteList[0];
             _collider.isTrigger = false;
         }
         else{
-            _sprite.sprite      = _sceneManager.SpriteManager.ObjectSpriteList[1];
+            _sprite.sprite      = _sceneManager.SpriteManager.NormalBlockWhiteSpriteList[1];
             _collider.isTrigger = true;
         }
     }
