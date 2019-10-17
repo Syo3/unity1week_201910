@@ -11,6 +11,7 @@ public class GoalObject : ObjectBase {
 
     #region private field
     private bool _activeFlg;
+    private bool _goalFlg;
     #endregion
 
     #region access
@@ -22,6 +23,7 @@ public class GoalObject : ObjectBase {
     protected override void Init()
     {
         _activeFlg = false;
+        _goalFlg   = false;
     }
 
     /// <summary>
@@ -29,6 +31,7 @@ public class GoalObject : ObjectBase {
     /// </summary>
     protected override void SetCollision(bool flg)
     {
+        if(_goalFlg)return;
         if(flg){
             _sprite.sprite = _sceneManager.SpriteManager.GoalWhiteSpriteList[0];
             _activeFlg     = true;
@@ -45,8 +48,9 @@ public class GoalObject : ObjectBase {
     /// <param name="other"></param>
     void OnTriggerEnter2D(Collider2D other)
     {
-        if(!_activeFlg || other.gameObject.tag != "Player")return;
+        if(_goalFlg || !_activeFlg || other.gameObject.tag != "Player")return;
         _sprite.enabled = false;
-        _sceneManager.SetEndEffect();
+        _goalFlg        = true;
+        _sceneManager.StageGenerateManager.AddGoalActiveCount();
     }
 }

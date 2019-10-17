@@ -42,14 +42,11 @@ public class ObjectBase : MonoBehaviour {
     /// <param name="flg"></param>
     public void SetShowFlg(Const.ColorType colorType = Const.ColorType.kNone, bool collisionEnterFlg = false)
     {
-        Debug.Log(colorType);
-        Debug.Log(collisionEnterFlg);
         if(!_shadowChangeFlg) return;
         if(collisionEnterFlg){
             if(_colorType == colorType){                
                 //_sprite.enabled = true;
                 SetCollision(true);
-                Debug.Log(_sprite.enabled);
             }
             else{
                 SetCollision(false);

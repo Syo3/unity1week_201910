@@ -11,14 +11,18 @@ public class StageGenerateManager : MonoBehaviour {
     private GameObject _worldParent;
     [SerializeField, Tooltip("スコープ")]
     private Scope _scope;
+    [SerializeField, Tooltip("終了演出")]
+    private Animator _endEffect;
     #endregion
 
     #region private field
     private MainSceneManager _sceneManager;
     private List<ObjectBase> _stageObjectList;
+    private StageManagementData _stageManagementData;
     private int _stageID;
     private List<GoalObject> _goalObjectList;
     private List<Player> _playerObjectList;
+    private int _goalActiveCount;
     #endregion
 
     #region access
@@ -66,6 +70,8 @@ public class StageGenerateManager : MonoBehaviour {
     /// </summary>
     public void CreateStage()
     {
+        // ステージ管理データ取得
+        _stageManagementData = StageDataManager.GetStageManagementData(_stageID);
         // オブジェクト作成ループ
         var list = StageDataManager.GetStageData(_stageID);
         for(var i = 0; i < list.Count; ++i){
@@ -83,13 +89,40 @@ public class StageGenerateManager : MonoBehaviour {
                 _playerObjectList.Add((Player)_stageObjectList[i]);
             }
         }
+        _goalActiveCount = 0;
+        _endEffect.Play("EndEffect_StartEffect");
     }
 
     /// <summary>
     /// 再度同じステージを作成
     /// </summary>
-    public void ReStart(){
+    public void ReStart()
+    {
+        DeleteStageObject();
+        CreateStage();
+    }
 
+    /// <summary>
+    /// ゴールカウント追加
+    /// </summary>
+    public void AddGoalActiveCount()
+    {
+        ++_goalActiveCount;
+        if(_goalActiveCount == _stageManagementData._goalCount){
+            SetEndEffect();
+            for(var i = 0; i < _playerObjectList.Count; ++i){
+                _playerObjectList[i].ActiveFlg = false;
+            }
+        }
+    }
+
+    /// <summary>
+    /// ステージ終了演出
+    /// </summary>
+    public void SetEndEffect()
+    {
+        _endEffect.Play("EndEffect_Start");
+        StartCoroutine(EffectEndCheck());
     }
 
     /// <summary>
@@ -98,7 +131,7 @@ public class StageGenerateManager : MonoBehaviour {
     private void DeleteStageObject()
     {
         for(var i = 0; i < _stageObjectList.Count; ++i){
-            Destroy(_stageObjectList[i]);
+            Destroy(_stageObjectList[i].gameObject);
         }
         _stageObjectList  = new List<ObjectBase>();
         _goalObjectList   = new List<GoalObject>();
@@ -125,6 +158,23 @@ public class StageGenerateManager : MonoBehaviour {
             return _sceneManager.PrefabManager.WhiteGoal;
         }
         return null;
+    }
+
+    /// <summary>
+    /// ステージ終了演出終了チェック
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator EffectEndCheck()
+    {
+        yield return null;
+        var stateInfo = _endEffect.GetCurrentAnimatorStateInfo(0);
+        while(stateInfo.normalizedTime < 1.0f){
+            yield return null;
+            stateInfo = _endEffect.GetCurrentAnimatorStateInfo(0);
+        }
+        // 次のステージ作成
+        StageCountUp();
+        ReStart();
     }
     #endregion
 }

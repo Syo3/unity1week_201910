@@ -89,10 +89,7 @@ public class Scope : MonoBehaviour {
     void OnTriggerEnter2D(Collider2D other)
     //void OnCollisionEnter2D ( Collision2D other )
     {
-        Debug.Log("test");
         if(other.gameObject.tag != "ShadowObject" && other.gameObject.tag != "Player")return;
-
-        Debug.Log("衝突");
         var objectBase = other.gameObject.GetComponent<ObjectBase>();
         objectBase.SetShowFlg(_colorType, true);
     }
@@ -105,7 +102,6 @@ public class Scope : MonoBehaviour {
     void OnTriggerExit2D(Collider2D other)
     {
         if(other.gameObject.tag != "ShadowObject" && other.gameObject.tag != "Player")return;
-        Debug.Log("衝突抜け");
         var objectBase = other.gameObject.GetComponent<ObjectBase>();
         objectBase.SetShowFlg(_colorType, false);
     }

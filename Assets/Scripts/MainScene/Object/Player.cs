@@ -21,6 +21,11 @@ public class Player : ObjectBase {
     private bool _activeFlg;
     #endregion
 
+    #region access
+    public bool ActiveFlg{
+        set{_activeFlg = value;}
+    }
+    #endregion
 
     void Update()
     {
@@ -79,15 +84,8 @@ public class Player : ObjectBase {
     /// </summary>
     protected override void SetCollision(bool flg)
     {
-        Debug.Log("set collision:"+flg);
-        if(flg){
-            _animator.Play("Player_Wait");
-            _activeFlg = true;
-        }
-        else{
-            _animator.Play("Player_HideWait");
-            _activeFlg = false;
-        }
+        _activeFlg = flg;
+        _animator.Play( flg ? "Player_Wait" : "Player_HideWait" );
     }
     #endregion
 

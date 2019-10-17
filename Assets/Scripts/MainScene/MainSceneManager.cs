@@ -15,12 +15,12 @@ public class MainSceneManager : MonoBehaviour {
     #region SerializeField
     [SerializeField, Tooltip("読み込みスプライト管理")]
     private SpriteManager _spriteManager;
-    [SerializeField, Tooltip("終了演出")]
-    private Animator _endEffect;
     [SerializeField, Tooltip("ステージ作成")]
     private StageGenerateManager _stageGenerateManager;
     [SerializeField, Tooltip("プレハブ管理")]
     private PrefabManager _prefabManager;
+    [SerializeField, Tooltip("UI管理")]
+    private UIManager _uiManager;
     #endregion
 
     #region private field
@@ -43,25 +43,17 @@ public class MainSceneManager : MonoBehaviour {
     }
     #endregion
 
-	// Use this for initialization
+    /// <summary>
+    /// シーン開始
+    /// </summary>
 	void Start ()
     {
-        _stageGenerateManager.Init(this);
         // ステージ作成
+        _stageGenerateManager.Init(this);
         _stageGenerateManager.CreateStage();
+        _uiManager.Init(this);
 	}
 	
-	// Update is called once per frame
-	void Update ()
-    {
-		
-	}
-
     #region public function
-
-    public void SetEndEffect()
-    {
-        _endEffect.Play("EndEffect_Start");
-    }
     #endregion
 }
