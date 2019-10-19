@@ -7,12 +7,14 @@ using System.Linq;
 public class Player : ObjectBase {
 
     #region define
-    private readonly float kMoveSpeed = 20.0f;
+    private readonly float kMoveSpeed = 30.0f;
     #endregion
 
     #region SerializeField
     [SerializeField, Tooltip("アニメーター")]
     private Animator _animator;
+    [SerializeField, Tooltip("物理")]
+    private Rigidbody2D _rigidBody2d;
     #endregion
 
     #region private field
@@ -37,6 +39,7 @@ public class Player : ObjectBase {
         else{
             SearchAnimation();
         }
+        StageFallCheck();
     }
 
     /// <summary>
@@ -57,6 +60,9 @@ public class Player : ObjectBase {
         }
     }
 
+    /// <summary>
+    /// 探すアニメーション
+    /// </summary>
     private void SearchAnimation()
     {
         _animationCount += Time.deltaTime;
@@ -66,7 +72,6 @@ public class Player : ObjectBase {
             _animator.Play("Player_Wait");
         }
     }
-
 
     #region protected function
     /// <summary>
@@ -86,6 +91,7 @@ public class Player : ObjectBase {
     {
         _activeFlg = flg;
         _animator.Play( flg ? "Player_Wait" : "Player_HideWait" );
+        _rigidBody2d.gravityScale = _activeFlg ? 20.0f : 0.0f;
     }
     #endregion
 
@@ -111,6 +117,17 @@ public class Player : ObjectBase {
     {
         var goalObjectList = _sceneManager.StageGenerateManager.GoalObjectList;
         return goalObjectList.Where(x => x.ActiveFlg == true).OrderBy(x => Vector3.Distance(_transform.position, x.transform.position)).ToList()[0];
+    }
+
+    /// <summary>
+    /// 落下チェック
+    /// </summary>
+    private void StageFallCheck()
+    {
+        if(!_activeFlg) return;
+        if(_transform.position.y < -160.0f){
+            _sceneManager.StageGenerateManager.ReStart();
+        }
     }
     #endregion
 }

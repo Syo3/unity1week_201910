@@ -13,16 +13,19 @@ public class StageGenerateManager : MonoBehaviour {
     private Scope _scope;
     [SerializeField, Tooltip("終了演出")]
     private Animator _endEffect;
+    [SerializeField, Tooltip("ステージID")]
+    private int _stageID;
     #endregion
 
     #region private field
     private MainSceneManager _sceneManager;
+    private Camera _mainCamera;
     private List<ObjectBase> _stageObjectList;
     private StageManagementData _stageManagementData;
-    private int _stageID;
     private List<GoalObject> _goalObjectList;
     private List<Player> _playerObjectList;
     private int _goalActiveCount;
+    private System.Action _endCallback;
     #endregion
 
     #region access
@@ -41,11 +44,13 @@ public class StageGenerateManager : MonoBehaviour {
     public void Init(MainSceneManager sceneManager)
     {
         _sceneManager    = sceneManager;
-        _stageID         = 1;
+        //_stageID         = 1;
+        _stageID         = _stageID == 0 ? 1 :_stageID;
         _stageObjectList = new List<ObjectBase>();
         _scope.Init(_sceneManager);
         _goalObjectList   = new List<GoalObject>();
         _playerObjectList = new List<Player>();
+        _mainCamera       = Camera.main;
     }
 
     /// <summary>
@@ -80,8 +85,9 @@ public class StageGenerateManager : MonoBehaviour {
         // オブジェクト初期化ループ
         for(var i = 0; i < _stageObjectList.Count; ++i){
 
+            _stageObjectList[i].SetSettingString(list[i]._settingString);
             _stageObjectList[i].Init(_sceneManager);
-
+            _stageObjectList[i].SetShowFlg(list[i]._colorType, true);
             if(_stageObjectList[i] is GoalObject){
                 _goalObjectList.Add((GoalObject)_stageObjectList[i]);
             }
@@ -90,6 +96,7 @@ public class StageGenerateManager : MonoBehaviour {
             }
         }
         _goalActiveCount = 0;
+        SettingBackgroundColor();
         _endEffect.Play("EndEffect_StartEffect");
     }
 
@@ -98,8 +105,12 @@ public class StageGenerateManager : MonoBehaviour {
     /// </summary>
     public void ReStart()
     {
-        DeleteStageObject();
-        CreateStage();
+        SetEndEffect();
+        for(var i = 0; i < _playerObjectList.Count; ++i){
+            _playerObjectList[i].ActiveFlg = false;
+        }
+        // DeleteStageObject();
+        // CreateStage();
     }
 
     /// <summary>
@@ -109,6 +120,7 @@ public class StageGenerateManager : MonoBehaviour {
     {
         ++_goalActiveCount;
         if(_goalActiveCount == _stageManagementData._goalCount){
+            _endCallback = (() => {StageCountUp();});
             SetEndEffect();
             for(var i = 0; i < _playerObjectList.Count; ++i){
                 _playerObjectList[i].ActiveFlg = false;
@@ -155,9 +167,28 @@ public class StageGenerateManager : MonoBehaviour {
         case Common.Const.ObjectType.kFixedBlock:
             return _sceneManager.PrefabManager.FixedBlockObject;
         case Common.Const.ObjectType.kGoalWhite:
-            return _sceneManager.PrefabManager.WhiteGoal;
+            return _sceneManager.PrefabManager.WhiteGoalObject;
+        case Common.Const.ObjectType.kLiftBlockWhite:
+            return _sceneManager.PrefabManager.WhiteLiftBlockObject;
+        case Common.Const.ObjectType.kFallBlockWhiteA:
+            return _sceneManager.PrefabManager.WhiteFallBlockAObject;
         }
         return null;
+    }
+
+    /// <summary>
+    /// 背景色設定
+    /// </summary>
+    private void SettingBackgroundColor()
+    {
+        switch(_stageManagementData._backgroundColorType){
+        case 1:
+            _mainCamera.backgroundColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+            break;
+        case 2:
+            _mainCamera.backgroundColor = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+            break;
+        }        
     }
 
     /// <summary>
@@ -173,8 +204,10 @@ public class StageGenerateManager : MonoBehaviour {
             stateInfo = _endEffect.GetCurrentAnimatorStateInfo(0);
         }
         // 次のステージ作成
-        StageCountUp();
-        ReStart();
+        if(_endCallback != null) _endCallback();
+        _endCallback = null;
+        DeleteStageObject();
+        CreateStage();
     }
     #endregion
 }

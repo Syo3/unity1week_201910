@@ -10,6 +10,8 @@ public class StageData : MonoBehaviour {
     public Common.Const.ObjectType _type;
     public int _posX;
     public int _posY;
+    public Const.ColorType _colorType;
+    public string _settingString;
     #endregion
 
     /// <summary>
@@ -18,10 +20,12 @@ public class StageData : MonoBehaviour {
     /// <param name="type"></param>
     /// <param name="posX"></param>
     /// <param name="posY"></param>
-    public StageData(Common.Const.ObjectType type, int posX, int posY)
+    public StageData(Common.Const.ObjectType type, int posX, int posY, Const.ColorType colorType=Const.ColorType.kNone, string settingString="")
     {
-        _type = type;
-        _posX = posX;
-        _posY = posY;
+        _type          = type;
+        _posX          = posX;
+        _posY          = posY;
+        _colorType     = colorType;
+        _settingString = settingString;
     }
 }

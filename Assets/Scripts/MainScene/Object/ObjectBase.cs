@@ -15,6 +15,7 @@ public class ObjectBase : MonoBehaviour {
     #region protected field
     protected MainSceneManager _sceneManager;
     protected bool _shadowChangeFlg;    // 色が変わるオブジェクトか
+    protected string _initSettingString;
     #endregion
 
     /// <summary>
@@ -34,6 +35,15 @@ public class ObjectBase : MonoBehaviour {
     protected virtual void Init()
     {
 
+    }
+
+    /// <summary>
+    /// 設定用文字列設定
+    /// </summary>
+    /// <param name="settingString"></param>
+    public void SetSettingString(string settingString)
+    {
+        _initSettingString = settingString;
     }
 
     /// <summary>

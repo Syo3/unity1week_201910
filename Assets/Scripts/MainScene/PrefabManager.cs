@@ -19,6 +19,10 @@ public class PrefabManager : MonoBehaviour {
     private GameObject _whiteGoal;
     [SerializeField, Tooltip("通常ゴール黒")]
     private GameObject _blackGoal;
+    [SerializeField, Tooltip("リフト白")]
+    private GameObject _whiteLiftBlockObject;
+    [SerializeField, Tooltip("落下ブロック白タイプA")]
+    private GameObject _whiteFallBlockAObject;
     #endregion
 
     #region access
@@ -34,8 +38,14 @@ public class PrefabManager : MonoBehaviour {
     public GameObject FixedBlockObject{
         get{return _fixedBlockObject;}
     }
-    public GameObject WhiteGoal{
+    public GameObject WhiteGoalObject{
         get{return _whiteGoal;}
+    }
+    public GameObject WhiteLiftBlockObject{
+        get{return _whiteLiftBlockObject;}
+    }
+    public GameObject WhiteFallBlockAObject{
+        get{return _whiteFallBlockAObject;}
     }
     #endregion
 }

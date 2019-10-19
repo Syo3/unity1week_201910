@@ -38,7 +38,12 @@
             kGoalBlack,
             kNormalBlockWhite,
             kNormalBlockBlack,
-            kFixedBlock
+            kFixedBlock,
+            kLiftBlockWhite,
+            kLiftBlockBlack,
+            kFallBlockWhiteA,
+            kFallBlockWhiteBTop,
+            kFallBlockWhiteBBottom
         }
 	}
 }

@@ -21,7 +21,6 @@ public class Scope : MonoBehaviour {
     private bool _initFlg = false;
     private bool _inputFlg;
     private Const.ColorType _colorType;
-
     #endregion
 
     #region public function
@@ -93,7 +92,6 @@ public class Scope : MonoBehaviour {
         var objectBase = other.gameObject.GetComponent<ObjectBase>();
         objectBase.SetShowFlg(_colorType, true);
     }
-
 
     /// <summary>
     /// 衝突抜け

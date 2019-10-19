@@ -11,6 +11,10 @@ public class SpriteManager : MonoBehaviour {
     private List<Sprite> _normalBlockWhiteSpriteList;
     [SerializeField, Tooltip("ゴール白")]
     private List<Sprite> _goalWhiteSpriteList;
+    [SerializeField, Tooltip("リフトブロック白")]
+    private List<Sprite> _liftBlockWhiteSpriteList;
+    [SerializeField, Tooltip("落下ブロックタイプA")]
+    private List<Sprite> _fallBlockWhiteASpriteList;
     #endregion
 
     #region access
@@ -22,6 +26,12 @@ public class SpriteManager : MonoBehaviour {
     }
     public List<Sprite> GoalWhiteSpriteList{
         get{return _goalWhiteSpriteList;}
+    }
+    public List<Sprite> LiftBlockWhiteSpriteList{
+        get{return _liftBlockWhiteSpriteList;}
+    }
+    public List<Sprite> FallBlockWhiteASpriteList{
+        get{return _fallBlockWhiteASpriteList;}
     }
     #endregion
 }

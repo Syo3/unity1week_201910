@@ -18,6 +18,12 @@ public class FadeManager : MonoBehaviour {
     private System.Action _callback;
     #endregion
 
+    #region access
+    public Image Image{
+        get{return _fadeImage;}
+    }
+    #endregion
+
     /// <summary>
     /// フェード終了コールバック設定
     /// </summary>
